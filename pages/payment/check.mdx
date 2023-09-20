@@ -1,0 +1,68 @@
+# Check a Payment
+
+The `CheckPayment` method allows you to check the status of an existing payment transaction.
+
+This is crucial for confirming whether a payment has been successfully processed, declined, or is still pending.
+
+| Parameters  |                           Definition                            |
+| :---------- | :-------------------------------------------------------------: |
+| `paymentID` | The unique identifier for the payment you wish to cancel, UUID. |
+
+```go filename="payment.go" copy
+client, err := fib.New(clientID, clientSecret, isTesting)
+if err != nil {
+    log.Fatalf("Error creating FIB client: %s - %s", err.Title, err.Description)
+}
+
+// Check the status of an existing payment
+response, checkErr := client.CheckPayment(someUUID)
+if checkErr != nil {
+    log.Fatal("Error checking payment:", checkErr.ErrorBody)
+}
+
+log.Printf("Payment Status: %s", response.Status)
+```
+
+## Response
+
+The response object returned by the `CheckPayment` method contains important details about the payment status.
+
+Below are the fields that you can expect in the response object:
+
+| Response          |                               Definition                                |
+| :---------------- | :---------------------------------------------------------------------: |
+| `PaymentID`       |               A unique identifier for the payment, UUID.                |
+| `Status`          |                   The current status of the payment.                    |
+| `PaidAt`          |   The timestamp indicating when the payment was made (if applicable).   |
+| `MonetaryValue`   |                 The amount and currency of the payment.                 |
+| `DecliningReason` |             The reason for payment decline (if applicable).             |
+| `DeclinedAt`      | The timestamp indicating when the payment was declined (if applicable). |
+| `PaidBy`          |         Information about who made the payment (if applicable).         |
+
+```json filename="example.json"
+{
+  "PaymentID": "some-uuid",
+  "Status": "PAID",
+  "PaidAt": "2023-09-10T12:34:56Z",
+  "MonetaryValue": {
+    "Amount": 500,
+    "Currency": "IQD"
+  },
+  "DecliningReason": null,
+  "DeclinedAt": null,
+  "PaidBy": {
+    "Name": "John Doe",
+    "IBAN": "some-iban"
+  }
+}
+```
+
+## Payment Statuses
+
+| Response         |                        Definition                        |
+| :--------------- | :------------------------------------------------------: |
+| PAID             |       The payment has been successfully completed.       |
+| UNPAID           | The payment is still pending and has not been completed. |
+| DECLINED         |        The payment was declined for some reason.         |
+| REFUND_REQUESTED |       A refund for the payment has been requested.       |
+| REFUNDED         |       The payment has been successfully refunded.        |

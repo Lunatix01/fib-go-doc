@@ -1,0 +1,7 @@
+{
+    "create": "Create Payment",
+    "check": "Check Payment",
+    "cancel": "Cancel Payment",
+    "refund": "Refund Payment",
+    "error-handling": "Error Handling"
+}
