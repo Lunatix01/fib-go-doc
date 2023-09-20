@@ -21,7 +21,14 @@ const config: DocsThemeConfig = {
         return {
             titleTemplate: '%s – Fib-go Documentation',
         }
-    }
+    },
+    head: (
+        <>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <meta property="og:title" content="Fib Golang" />
+            <meta property="og:description" content="First Iraqi Bank, Golang documentation" />
+        </>
+    )
 
 }
 
