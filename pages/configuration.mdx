@@ -1,0 +1,40 @@
+# Configuration
+
+Now, It's time to see, how we can authenticate using our credentials.
+
+To create a new FIB client, simply use the New function with your clientID and clientSecret.
+The third argument specifies whether you are using the testing environment (**true for testing, false for production**).
+
+Here is an example to create a client, under the hood it authenticates and returns access token:
+
+```go filename="main.go" copy
+clientID := "your-client-id"
+clientSecret := "your-client-secret"
+
+// is it testing environment or production environment
+isTesting := false
+
+client, err := fib.New(clientID, clientSecret, isTesting)
+if err != nil {
+    log.Fatalf("Error creating FIB client: %s - %s", err.Title, err.Description)
+}
+```
+
+## Error handling
+
+The New function returns an error of type \*LoginError if the client creation fails.
+This custom error type provides more context about what went wrong during the initialization.
+
+The `LoginError` struct contains two fields:
+
+```txt Title:
+Title: A short description of the error.
+Description: A more detailed explanation of the error.
+```
+
+```go
+type LoginError struct {
+	Title       string
+	Description string
+}
+```

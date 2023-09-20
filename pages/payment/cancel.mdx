@@ -1,0 +1,37 @@
+# Cancel a payment
+
+The `CancelPayment` method allows you to cancel an existing payment transaction.
+
+This is particularly useful if you need to invalidate a payment request due to various reasons such as user cancellation, timeout, or other business logic.
+
+| Parameters  |                           Definition                            |
+| :---------- | :-------------------------------------------------------------: |
+| `paymentID` | The unique identifier for the payment you wish to cancel, UUID. |
+
+Usage Example
+Here's how you can use the CancelPayment method:
+
+```go filename="payment.go" copy
+client, err := fib.New(clientID, clientSecret, isTesting)
+if err != nil {
+    log.Fatalf("Error creating FIB client: %s - %s", err.Title, err.Description)
+}
+
+// Cancel an existing payment
+isCanceled, cancelErr := client.CancelPayment(someUUID)
+if cancelErr != nil {
+    log.Fatal("Error canceling payment:", cancelErr.ErrorBody)
+}
+
+if isCanceled {
+    log.Println("Payment successfully canceled.")
+} else {
+    log.Println("Failed to cancel the payment.")
+}
+```
+
+## Response
+
+| Response     |                                Definition                                 |
+| :----------- | :-----------------------------------------------------------------------: |
+| `isCanceled` | A boolean value indicating whether the payment was successfully canceled. |

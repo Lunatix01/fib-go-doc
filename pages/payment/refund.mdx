@@ -1,0 +1,26 @@
+# Refund a payment
+
+The `RefundPayment` method allows you to initiate a refund for an existing payment transaction.
+
+| Parameters  |                           Definition                            |
+| :---------- | :-------------------------------------------------------------: |
+| `paymentID` | The unique identifier for the payment you wish to cancel, UUID. |
+
+```go filename="payment.go" copy
+client, err := fib.New(clientID, clientSecret, isTesting)
+if err != nil {
+    log.Fatalf("Error creating FIB client: %s - %s", err.Title, err.Description)
+}
+
+// Initiate a refund for a specific payment
+refundErr := client.RefundPayment(paymentID)
+if refundErr != nil {
+    log.Fatal("Error initiating refund:", refundErr.ErrorBody)
+}
+```
+
+## Response
+
+The `RefundPayment` method does not return a response object. Instead, it returns a PaymentError object if the refund operation fails.
+
+The PaymentError object contains details about why the refund failed.

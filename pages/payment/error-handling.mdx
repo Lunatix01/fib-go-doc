@@ -1,0 +1,58 @@
+# Error handling
+
+import { Callout } from "nextra/components";
+
+<Callout type="warning" emoji="⚠️">
+  PaymentError returns a pointer to a memory address, so don't use it directly to show values.
+</Callout>
+
+#### PaymentError
+
+Returned by: [CreatePayment](/payment/create), [CheckPayment](/payment/check), [CancelPayment](/payment/cancel), [RefundPayment](/payment/refund).
+
+| Field       |                   Definition                   |
+| :---------- | :--------------------------------------------: |
+| `error`     |          Standard Go error interface.          |
+| `ErrorBody` | An object containing additional error details. |
+
+#### ErrorBody
+
+| Field     |                   Definition                   |
+| :-------- | :--------------------------------------------: |
+| `TraceID` |   A unique identifier for tracing the error.   |
+| `Errors`  | An array of Error objects detailing the error. |
+
+#### Error
+
+| Field    |                   Definition                   |
+| :------- | :--------------------------------------------: |
+| `Code`   |         A machine-readable error code.         |
+| `Title`  |            The title of the error.             |
+| `Detail` | Detailed description of what caused the error. |
+
+```go filename="error.go"
+client, err := fib.New(clientID, clientSecret, isTesting)
+if err != nil {
+    log.Fatalf("Error creating FIB client: %s - %s", err.Title, err.Description)
+}
+
+response, paymentErr := client.CreatePayment(500, "IQD", "http://callback.url")
+if paymentErr != nil {
+    log.Fatalf("Error creating payment: %s - %s", paymentErr.ErrorBody.Errors[0].Title, paymentErr.ErrorBody.Errors[0].Detail)
+}
+
+checkResponse, checkErr := client.CheckPayment(paymentID)
+if checkErr != nil {
+    log.Fatalf("Error checking payment: %s - %s", checkErr.ErrorBody.Errors[0].Title, checkErr.ErrorBody.Errors[0].Detail)
+}
+
+cancelSuccess, cancelErr := client.CancelPayment(paymentID)
+if cancelErr != nil {
+    log.Fatalf("Error canceling payment: %s - %s", cancelErr.ErrorBody.Errors[0].Title, cancelErr.ErrorBody.Errors[0].Detail)
+}
+
+refundErr := client.RefundPayment(paymentID)
+if refundErr != nil {
+    log.Fatalf("Error initiating refund: %s - %s", refundErr.ErrorBody.Errors[0].Title, refundErr.ErrorBody.Errors[0].Detail)
+}
+```

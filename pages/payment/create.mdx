@@ -1,0 +1,64 @@
+# Create a New Payment
+
+The `CreatePayment` method allows you to initiate a new payment transaction.
+
+This method is designed to be simple yet flexible, providing you with control over the payment details.
+
+| Parameters                     |                                    Definition                                    |
+| :----------------------------- | :------------------------------------------------------------------------------: |
+| `Amount`                       |                 The amount to be paid, specified as an integer.                  |
+| `Currency`                     | The currency in which the payment is made. Currently, only **IQD** is supported. |
+| `StatusCallBackURL`            |            The URL to which the payment status updates will be sent.             |
+| `WithDescription(description)` |     Adds a description to the payment, specified as a string **(Optional)**.     |
+| `WithExpiresIn(expiresIn)`     |  Sets an expiration time for the payment, specified as a string **(Optional)**.  |
+
+import { Callout } from "nextra/components";
+
+<Callout emoji="💡">
+  **ExpiresIn** A string representation of this duration using ISO-8601 seconds based representation
+  should be used, such as PT8H6M12.345S, here is an
+  [Example](https://github.com/Lunatix01/fib-go/blob/master/testing/fib_payment_integration_test.go#L60)
+</Callout>
+
+```go filename="payment.go" copy
+client, err := fib.New(clientID, clientSecret, isTesting)
+if err != nil {
+    log.Fatalf("Error creating FIB client: %s - %s", err.Title, err.Description)
+}
+
+// Create a new payment of 500 IQD
+response, paymentErr := client.CreatePayment(500, "IQD", "http://callback.url")
+if paymentErr != nil {
+    log.Fatal("Error creating payment:", paymentErr.ErrorBody)
+}
+```
+
+## Response
+
+The response object returned by the CreatePayment function contains important details about the payment transaction.
+
+Below are the fields that you can expect in the response object:
+
+| Response           |                           Definition                           |
+| :----------------- | :------------------------------------------------------------: |
+| `PaymentID`        |      A unique identifier for the payment, usually a UUID.      |
+| `ReadableCode`     |       A human-readable code associated with the payment.       |
+| `QRCode`           |  A QR code string that can be used to facilitate the payment.  |
+| `ValidUntil`       |              The expiration time of the payment.               |
+| `PersonalAppLink`  | A link to the personal app where the payment can be completed. |
+| `BusinessAppLink`  |  A link to the business app where the payment can be managed.  |
+| `CorporateAppLink` | A link to the corporate app where the payment can be overseen. |
+
+`Response` example:
+
+```json filename="example.json"
+{
+  "PaymentID": "some-uuid",
+  "ReadableCode": "ABC123",
+  "QRCode": "some-qr-code-string",
+  "ValidUntil": "2023-09-10T12:34:56Z",
+  "PersonalAppLink": "http://personal-app-link",
+  "BusinessAppLink": "http://business-app-link",
+  "CorporateAppLink": "http://corporate-app-link"
+}
+```
