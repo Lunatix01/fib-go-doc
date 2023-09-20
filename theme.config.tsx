@@ -28,7 +28,8 @@ const config: DocsThemeConfig = {
             <meta property="og:title" content="Fib Golang" />
             <meta property="og:description" content="First Iraqi Bank, Golang documentation" />
         </>
-    )
+    ),
+    primaryHue: 167
 
 }
 
