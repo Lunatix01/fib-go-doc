@@ -13,7 +13,7 @@ if err != nil {
 }
 
 // Initiate a refund for a specific payment
-refundErr := client.RefundPayment(paymentID)
+isRefunded, refundErr := client.RefundPayment(paymentID)
 if refundErr != nil {
     log.Fatal("Error initiating refund:", refundErr.ErrorBody)
 }
@@ -21,6 +21,6 @@ if refundErr != nil {
 
 ## Response
 
-The `RefundPayment` method does not return a response object. Instead, it returns a PaymentError object if the refund operation fails.
+The `RefundPayment` method does return a `bool`, if it's true meaning refund requested, you can check using `PaymentCheck`. It returns a PaymentError object if the refund operation fails.
 
 The PaymentError object contains details about why the refund failed.
